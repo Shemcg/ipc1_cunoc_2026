@@ -29,13 +29,21 @@ public class RegistrarRentaVehiculos {
     private int totalRentasRealizadas = 0;
     private int rentaMasGrande = 0;
     private int precioTotalRegistroActual = 0;
+    private int indice = 0;
+    
+    //CODIGO ANSI
+    private static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_NEGRITA = "\u001b[1m";
+    private static final String ANSI_ROJO = "\u001B[31m";
+    private static final String ANSI_VERDE = "\u001B[32m";
+    private static final String ANSI_AMARILLO = "\u001B[33m";
+    private static final String ANSI_MORADO = "\u001B[35m";
+    private static final String ANSI_CYAN = "\u001B[36m";
     
     private Scanner scanner = new Scanner(System.in);
 
     public void iniciar() {
-    
-        System.out.println("Ejecutando...");
-        
+            
         iniciarRegistro();
     
         mostrarReportes();
@@ -43,31 +51,33 @@ public class RegistrarRentaVehiculos {
     }
     
     private void iniciarRegistro() {
-        
-        int continuarRegistro;
-        
+                
+            indice = 1;
+            
         do {
+            
             registrarDatos();
             calcularDatos();
-	
+            
             mostrarRegistroActual();
-		
-            System.out.println("Continuar con el registro (SI/NO): ");
-            continuarRegistro = Integer.valueOf(leerEntrada());
             
             rentaMayor();
-		
+            
             totalRentasRealizadas = totalRentasRealizadas + 1;
+            indice = indice + 1;
 		            
-        } while (continuarRegistro == 1);
+        } while (pedirDecision() == 1);
     
     }
     
     private void registrarDatos() {
         
         pedirNombreCliente();
+                
         pedirTipoVehiculo();
+        
         pedirCantidadDiasRenta();
+        
         pedirAgregarSeguro();
         
     }
@@ -160,7 +170,48 @@ public class RegistrarRentaVehiculos {
     
     private void mostrarRegistroActual() {
         
+        mostrarTituloPrograma();
+        mostrarRegistroCompletado();
         
+        mostrarNombreClienteActual();
+        mostrarTipoVehiculoActual();
+        mostrarCantidadDiasRentado();
+        mostrarDecisionAgregarSeguro();
+        
+    }
+    
+    private void mostrarRegistroCompletado() {
+        
+        String registroActual = ANSI_NEGRITA + ANSI_AMARILLO + "---- Registro #" + indice + " Completado" + ANSI_RESET + "\n";
+        System.out.println(registroActual);
+                
+    }
+    
+    private void mostrarNombreClienteActual() {
+        
+        String nombreClienteActual = ANSI_NEGRITA + ANSI_MORADO + "---- NOMBRE DEL CLIENTE: " + ANSI_RESET + ANSI_VERDE + nombreCliente + ANSI_RESET;
+        System.out.println(nombreClienteActual);
+        
+    }
+    
+    private void mostrarTipoVehiculoActual() {
+        
+        String tipoVehiculoActual = ANSI_NEGRITA + ANSI_CYAN + "---- TIPO DE VEHÍCULO QUE RENTÓ: " + ANSI_RESET + ANSI_VERDE + tipoVehiculo + ANSI_RESET;
+        System.out.println(tipoVehiculoActual);
+        
+    }
+    
+    private void mostrarCantidadDiasRentado() {
+        
+        String cantidadDiasRentado = ANSI_NEGRITA + ANSI_MORADO + "---- CANTIDAD DE DÍAS QUE RENTO EL VEHICULO: " + ANSI_RESET + ANSI_VERDE + cantidadDiasRenta + ANSI_RESET;
+        System.out.println(cantidadDiasRentado);
+        
+    }
+    
+    private void mostrarDecisionAgregarSeguro() {
+        
+        String decisionAgregarSeguro = ANSI_NEGRITA + ANSI_CYAN + "---- CUENTA CON SEGURO: " + ANSI_RESET + ANSI_VERDE + agregarSeguro + ANSI_RESET;
+        System.out.println(decisionAgregarSeguro);
         
     }
     
@@ -194,58 +245,114 @@ public class RegistrarRentaVehiculos {
         
     }
     
-    private void mostrarTitulo() {
+    private void mostrarTituloPrograma() {
         
-        System.out.println("REGISTRO DE RENTA DE VEHICULOS");
+        limpiarPantalla();
         
+        String titulo = ANSI_NEGRITA + ANSI_CYAN + "REGISTRO DE RENTA DE VEHICULOS" + ANSI_RESET;
+        
+        System.out.println("------------------------------");
+        System.out.println(titulo);
+        System.out.println("------------------------------\n");
+                
     }
     
     private void mostrarNumeroRegistro() {
         
-        System.out.println("Registro #");
-        
+            String registro = ANSI_NEGRITA + ANSI_AMARILLO + "Registro #" + ANSI_VERDE + indice + ANSI_RESET + "\n\n";
+
+            System.out.println(registro);
+            
     }
     
     private void pedirNombreCliente() {
         
-        System.out.println("Escriba el nombre del cliente: ");
+        mostrarTituloPrograma();
+        mostrarNumeroRegistro();
+        
+        String pedirNombreCliente = ANSI_MORADO + "Escriba el nombre del cliente: " + ANSI_RESET;
+        
+        System.out.println(pedirNombreCliente);
         nombreCliente = leerEntrada();
         
     }
     
     private void pedirTipoVehiculo() {
         
-        System.out.println("Escriba el tipo del vehículo (1-4): ");
-        System.out.println("1. SEDAN");
-        System.out.println("2. PICKUP");
-        System.out.println("3. MOTOCICLETA");
-        System.out.println("4. CAMION");
+        mostrarTituloPrograma();
+        mostrarNumeroRegistro();
+        
+        String pedirTipoVehiculo = ANSI_AMARILLO + "Escriba el tipo del vehículo (1-4): " + ANSI_RESET;
+        String sedan = ANSI_NEGRITA + "  1. " + ANSI_CYAN + "SEDAN" + ANSI_RESET;
+        String pickup = ANSI_NEGRITA + "  2. " + ANSI_CYAN + "PICKUP" + ANSI_RESET;
+        String motocicleta = ANSI_NEGRITA + "  3. " + ANSI_CYAN + "MOTOCICLETA" + ANSI_RESET;
+        String camion = ANSI_NEGRITA + "  4. " + ANSI_CYAN + "CAMION" + ANSI_RESET;
+        
+        System.out.println(pedirTipoVehiculo);
+        System.out.println(sedan);
+        System.out.println(pickup);
+        System.out.println(motocicleta);
+        System.out.println(camion);
         tipoVehiculo = Integer.valueOf(leerEntrada());
         
     }
     
     private void pedirCantidadDiasRenta() {
         
-        System.out.println("Cantidad de dias que se rentará el vehículo (en números): ");
+        mostrarTituloPrograma();
+        mostrarNumeroRegistro();
+        
+        String pedirCantidadDiasRenta = ANSI_MORADO + "Cantidad de dias que se rentará el vehículo (en números): " + ANSI_RESET;
+        
+        System.out.println(pedirCantidadDiasRenta);
         cantidadDiasRenta = Integer.valueOf(leerEntrada());
         
     }
     
     private void pedirAgregarSeguro() {
         
-        System.out.println("Desea agregar seguro: ");
-        System.out.println("1. SI");
-        System.out.println("2. NO");
+        mostrarTituloPrograma();
+        mostrarNumeroRegistro();
+        
+        String decisionSeguro = ANSI_AMARILLO + "Desea agregar seguro (1-2): " + ANSI_RESET;
+        String si = ANSI_NEGRITA + "  1. " + ANSI_VERDE + "SI" + ANSI_RESET;
+        String no = ANSI_NEGRITA + "  2. " + ANSI_VERDE + "NO" + ANSI_RESET;
+        
+        System.out.println(decisionSeguro);
+        System.out.println(si);
+        System.out.println(no);
         agregarSeguro = Integer.valueOf(leerEntrada());
+        
+    }
+    
+    private int pedirDecision() {
+        
+        String decisionRegistro = "\n" + ANSI_ROJO + "Continuar con el registro (1-2): " + ANSI_RESET;
+        String si = ANSI_NEGRITA + "  1. " + ANSI_VERDE + "SI" + ANSI_RESET;
+        String no = ANSI_NEGRITA + "  2. " + ANSI_VERDE + "NO" + ANSI_RESET;
+        
+        System.out.println(decisionRegistro);
+        System.out.println(si);
+        System.out.println(no);
+        
+        return Integer.valueOf(leerEntrada());
         
     }
     
     private String leerEntrada() {
         
-        System.out.print("-->"); 
+        String flecha = ANSI_NEGRITA + "--> " + ANSI_RESET;
+        
+        System.out.print(flecha); 
         String entrada = scanner.nextLine();
         
         return entrada;
         
     }
+    
+    public void limpiarPantalla() {
+        System.out.println("\033[H\033[2J");
+        System.out.flush();
+    }
+    
 }
